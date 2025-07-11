@@ -38,7 +38,7 @@ You can choose one of two methods to install ampurr.
 
 3.  **Navigate into the directory:**
     ```bash
-    cd ampurr-v1.0.0.zip
+    cd ampurr-v1.0.0
     ```
 
 4.  **Run the installer:**
