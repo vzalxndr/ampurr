@@ -1,4 +1,4 @@
-# Ampurr ᓚ₍ ^. .^₎
+# ampurr ᓚ₍ ^. .^₎
 
 > The purr-fect toolkit for managing your Linux hardware and extending your battery's health.
 
@@ -19,10 +19,40 @@ Ampurr is a simple utility for Linux laptops designed to give you control over y
 
 ## 🚀 Installation
 
-You can install Ampurr with just a few commands.
+You can choose one of two methods to install ampurr.
+
+### Method 1: Using Zip Archive (Recommended for most users)
+
+1.  **Download the latest version:**
+    *   Go to the [main page of the Ampurr repository](https://github.com/vzalxndr/ampurr).
+    *   Click the green `<> Code` button.
+    *   Click `Download ZIP`.
+
+2.  **Unzip the archive:**
+    Navigate to your Downloads folder and unzip the file. You can do this with your file manager or via the terminal:
+    ```bash
+    # Navigate to your downloads folder
+    cd ~/Downloads
+
+    # Unzip the file
+    unzip ampurr-main.zip
+    ```
+
+3.  **Navigate into the directory:**
+    ```bash
+    cd ampurr-main
+    ```
+
+4.  **Run the installer:**
+    You will need to run the installer with superuser privileges, as it needs to copy files to system directories and set up a system service.
+    ```bash
+    sudo bash install.sh
+    ```
+
+### Method 2: Using Git
 
 1.  **Clone the repository:**
-    First, you need to download the source code from GitHub.
+    This method requires you to have `git` installed on your system.
     ```bash
     git clone https://github.com/vzalxndr/ampurr.git
     ```
@@ -33,12 +63,9 @@ You can install Ampurr with just a few commands.
     ```
 
 3.  **Run the installer:**
-    You will need to run the installer with superuser privileges, as it needs to copy files to system directories and set up a system service.
     ```bash
     sudo bash install.sh
     ```
-
-That's it! Ampurr is now installed and active on your system.
 
 ---
 
