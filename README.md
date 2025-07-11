@@ -21,12 +21,10 @@ Ampurr is a simple utility for Linux laptops designed to give you control over y
 
 You can choose one of two methods to install ampurr.
 
-### Method 1: Using Zip Archive (Recommended for most users)
-
+### Method 1: Download from Releases (Recommended)
 1.  **Download the latest version:**
-    *   Go to the [main page of the Ampurr repository](https://github.com/vzalxndr/ampurr).
-    *   Click the green `<> Code` button.
-    *   Click `Download ZIP`.
+    *   Go to the [**Releases page**](https://github.com/vzalxndr/ampurr/releases).
+    *   Under the latest release (e.g., `v1.0.0`), download the `ampurr-v1.0.0.zip` file from the **Assets** section.
 
 2.  **Unzip the archive:**
     Navigate to your Downloads folder and unzip the file. You can do this with your file manager or via the terminal:
@@ -35,12 +33,12 @@ You can choose one of two methods to install ampurr.
     cd ~/Downloads
 
     # Unzip the file
-    unzip ampurr-main.zip
+    unzip ampurr-v1.0.0.zip
     ```
 
 3.  **Navigate into the directory:**
     ```bash
-    cd ampurr-main
+    cd ampurr-v1.0.0.zip
     ```
 
 4.  **Run the installer:**
