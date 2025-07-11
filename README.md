@@ -1,5 +1,3 @@
----
-
 # Ampurr ᓚ₍ ^. .^₎
 
 > The purr-fect toolkit for managing your Linux hardware and extending your battery's health.
