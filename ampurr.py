@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import argparse
 import os
+import re
 import sys
 import subprocess
 
@@ -120,6 +121,65 @@ def find_supported_battery():
             return os.path.join(base_path, bat_dir)
     return None
 
+def _get_cpu_cores():
+    """searching fot cpu folders (cpu0, cpu1 ...)."""
+    base_path = "/sys/devices/system/cpu/"
+    try:
+        return [d for d in os.listdir(base_path) if re.match(r'cpu\d+', d)]
+    except FileNotFoundError:
+        return []
+
+def get_available_governors():
+    """returns available governors for CPU."""
+    gov_file = "/sys/devices/system/cpu/cpu0/cpufreq/scaling_available_governors"
+    try:
+        with open(gov_file, 'r') as f:
+            return f.read().strip().split()
+    except FileNotFoundError:
+        return []
+
+def get_current_governor():
+    """returns current cpu profile CPU."""
+    gov_file = "/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor"
+    try:
+        with open(gov_file, 'r') as f:
+            return f.read().strip()
+    except FileNotFoundError:
+        return "not available"
+
+def set_cpu_governor(governor_name):
+    """sets governor for all CPU cores."""
+    if os.geteuid() != 0:
+        print("❌ error: modifying the CPU governor requires superuser privileges.", file=sys.stderr)
+        sys.exit(1)
+
+    available = get_available_governors()
+    if not available:
+        print("❌ error: could not detect available CPU governors. your system may not support this.", file=sys.stderr)
+        sys.exit(1)
+
+    if governor_name not in available:
+        print(f"❌ error: '{governor_name}' is not a valid governor.", file=sys.stderr)
+        print(f"available options for your system: {' '.join(available)}", file=sys.stderr)
+        sys.exit(1)
+
+    cores = _get_cpu_cores()
+    if not cores:
+        print("❌ error: could not find any CPU cores.", file=sys.stderr)
+        sys.exit(1)
+
+    print(f"setting CPU governor to '{governor_name}' for all cores...")
+    try:
+        for core in cores:
+            gov_file = f"/sys/devices/system/cpu/{core}/cpufreq/scaling_governor"
+            if os.path.exists(gov_file):
+                with open(gov_file, 'w') as f:
+                    f.write(governor_name)
+        print(f"✅ CPU governor successfully set to '{governor_name}'.")
+    except Exception as e:
+        print(f"❌ error setting the CPU governor: {e}", file=sys.stderr)
+        sys.exit(1)
+
 # --- CORE USER-FACING FUNCTIONS ---
 def get_current_limit(battery_path):
     """returns the currently set charge limit."""
@@ -166,32 +226,73 @@ def run_cli():
         description="ampurr - a simple utility to manage your battery ᓚ₍ ^. .^₎",
         epilog=". ݁₊ ⊹݁ made with ❤️ to extend your battery's lifespan ݁˖ . "
     )
-    subparsers = parser.add_subparsers(dest="command", required=True, help="available commands")
-    parser_set = subparsers.add_parser("set", help="set a new charge limit (requires sudo)")
-    parser_set.add_argument("limit", type=int, help="the charge percentage to stop at (50-100)")
-    subparsers.add_parser("get", help="show the currently set limit")
-    subparsers.add_parser("status", help="show the current limit and battery capacity")
+    subparsers = parser.add_subparsers(dest="module", required=True)
+
+    # --- "BATTERY" ---
+    parser_battery = subparsers.add_parser("battery", help="Manage battery settings")
+    battery_subparsers = parser_battery.add_subparsers(dest="command", required=True)
+
+    # ampurr battery set <limit>
+    cmd_battery_set = battery_subparsers.add_parser("set", help="Set a new charge limit (requires sudo)")
+    cmd_battery_set.add_argument("limit", type=int, help="The charge percentage to stop at (50-100)")
+
+    # ampurr battery get
+    battery_subparsers.add_parser("get", help="Show the currently set limit")
+
+    # ampurr battery status
+    battery_subparsers.add_parser("status", help="Show the current limit and battery capacity")
+
+    # --- "CPU" ---
+    parser_cpu = subparsers.add_parser("cpu", help="Manage CPU power profiles (governors)")
+    cpu_subparsers = parser_cpu.add_subparsers(dest="command", required=True)
+
+    # ampurr cpu set <governor>
+    cmd_cpu_set = cpu_subparsers.add_parser("set", help="Set a new CPU governor (requires sudo)")
+    cmd_cpu_set.add_argument("governor", type=str, help="The governor to apply (e.g., powersave, performance)")
+
+    # ampurr cpu status
+    cpu_subparsers.add_parser("status", help="Show the current CPU governor")
+
+    # ampurr cpu list
+    cpu_subparsers.add_parser("list", help="List available CPU governors for your system")
+
     args = parser.parse_args()
 
+    # --- COMMANDS ---
     # find battery and exit if not supported
     battery_path = find_supported_battery()
     if battery_path is None:
         print("❌ error: no supported battery found.", file=sys.stderr)
         sys.exit(1)
 
-    if args.command == "set":
-        set_charge_limit(args.limit, battery_path)
-    elif args.command == "get":
-        limit = get_current_limit(battery_path)
-        print(f"current charge limit: {limit}%")
-    elif args.command == "status":
-        limit = get_current_limit(battery_path)
-        capacity = get_current_capacity(battery_path)
-        print(f"set charge limit: {limit}%")
-        if capacity is not None:
-            print(f"current capacity:   {capacity}%")
-        else:
-            print("could not determine current capacity")
+    # module selection
+    if args.module == "battery":
+        if args.command == "set":
+            set_charge_limit(args.limit, battery_path)
+        elif args.command == "get":
+            limit = get_current_limit(battery_path)
+            print(f"current charge limit: {limit}%")
+        elif args.command == "status":
+            limit = get_current_limit(battery_path)
+            capacity = get_current_capacity(battery_path)
+            print(f"set charge limit: {limit}%")
+            if capacity is not None:
+                print(f"current capacity:   {capacity}%")
+            else:
+                print("could not determine current capacity")
+    elif args.module == "cpu":
+        if args.command == "set":
+            set_cpu_governor(args.governor)
+        elif args.command == "status":
+            governor = get_current_governor()
+            print(f"current CPU governor: {governor}")
+        elif args.command == "list":
+            governors = get_available_governors()
+            if governors:
+                print("available governors for your system:")
+                print(f"  {' '.join(governors)}")
+            else:
+                print("could not find any available governors.")
 
 # --- MAIN ROUTER ---
 if __name__ == "__main__":

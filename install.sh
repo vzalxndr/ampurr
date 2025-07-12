@@ -26,4 +26,4 @@ chmod +x /usr/local/bin/ampurr
 
 echo ""
 echo "✅ ampurr was successfully installed."
-echo "run 'ampurr status' to get started."
+echo "run 'ampurr --help' to get started."
