@@ -2,124 +2,127 @@
 
 > The purr-fect toolkit for managing your Linux hardware and extending your battery's health.
 
-Ampurr is a simple utility for Linux laptops designed to give you control over your hardware. Its primary goal is to help you extend your battery's lifespan by setting a charge threshold, but it's built to grow into a full-fledged system management toolkit.
+Ampurr is a utility for Linux laptops designed to give you control over your hardware. It features both a powerful **GUI Dashboard** for system monitoring and a simple **CLI** for quick adjustments.
+
+Its primary goal is to help you extend your battery's lifespan by setting a charge threshold, but ampurr also allows you to manage CPU power profiles and monitor system resources in real-time.
+
+
 
 ---
 
 ## ✨ Features
 
-*   **Battery Charge Limiting**: Set a charge threshold (e.g., 80%) to prevent your battery from the stress of being constantly at 100%.
-*   **Persistent Settings**: Your chosen limit is automatically applied on every system boot.
-*   **Dynamic Battery Detection**: Automatically finds the correct battery (`BAT0`, `BAT1`, etc.) on your system.
-*   **Clean CLI Interface**: All features are accessible through a simple and intuitive command-line interface.
-*   **Easy Installation**: A simple installation script handles everything for you.
-*   **Safe Uninstallation**: The uninstaller cleans up after itself and safely resets your battery settings to 100%.
+*   **GUI Dashboard**: A user-friendly panel to manage all features, monitor system resources, and view sensor data.
+*   **Battery Charge Limiting**: Set a charge threshold (e.g., 80%) to reduce the stress on your battery from being constantly at 100%.
+*   **CPU Profile Management**: Switch between `powersave` and `performance` modes directly from the app to balance performance and power consumption.
+*   **System Monitoring**: Track CPU usage, RAM consumption, and a list of the top resource-hungry processes.
+*   **Sensor Monitoring**: View temperatures, voltages, and fan speeds with seamless `lm-sensors` integration.
+*   **Persistent Settings**: Your chosen charge limit is saved and automatically applied on every system boot.
+*   **Easy Installation**: A smart installer handles file copying and dependency checks for you.
+*   **Safe Uninstallation**: The uninstaller completely removes all components and safely resets your battery charge limit to 100%.
 
 ---
 
 ## 🚀 Installation
 
-You can choose one of two methods to install ampurr.
+You can install ampurr by downloading the latest version or by using Git.
 
-### Method 1: Download from Releases (Recommended)
-1.  **Download the latest version:**
-    *   Go to the [**Releases page**](https://github.com/vzalxndr/ampurr/releases).
-    *   Under the latest release (e.g., `v1.0.0`), download the `ampurr-v1.0.0.zip` file from the **Assets** section.
+### Requirements
 
-2.  **Unzip the archive:**
-    Navigate to your Downloads folder and unzip the file. You can do this with your file manager or via the terminal:
-    ```bash
-    # Navigate to your downloads folder
-    cd ~/Downloads
+*   A Linux-based system with **systemd**.
+*   **Python 3**.
+*   The GUI also requires `python3-pyqt5`, `lm-sensors`, and `polkit`. **The installer can set these up for you.**
 
-    # Unzip the file
-    unzip ampurr-v1.0.0.zip
-    ```
+### Installation Steps
 
-3.  **Navigate into the directory:**
-    ```bash
-    cd ampurr-v1.0.0
-    ```
+1.  **Get the project**
+    *   **Option A: Download a Release**
+        Go to the [**Releases page**](https://github.com/vzalxndr/ampurr/releases), then download and unzip the `ampurr-vX.X.X.zip` archive.
+    *   **Option B: Use Git**
+        ```bash
+        git clone https://github.com/vzalxndr/ampurr.git
+        cd ampurr
+        ```
 
-4.  **Run the installer:**
-    You will need to run the installer with superuser privileges, as it needs to copy files to system directories and set up a system service.
-    ```bash
-    sudo bash install.sh
-    ```
+2.  **Run the installer**
+    Navigate to the project folder and run the `install.sh` script with superuser privileges.
 
-### Method 2: Using Git
+    *   **To install both CLI and GUI (Recommended):**
+        The installer will check for dependencies and ask for permission to install them if needed.
+        ```bash
+        sudo bash install.sh --gui
+        ```
 
-1.  **Clone the repository:**
-    This method requires you to have `git` installed on your system.
-    ```bash
-    git clone https://github.com/vzalxndr/ampurr.git
-    ```
+    *   **To install the CLI only:**
+        ```bash
+        sudo bash install.sh
+        ```
 
-2.  **Navigate into the directory:**
-    ```bash
-    cd ampurr
-    ```
-
-3.  **Run the installer:**
-    ```bash
-    sudo bash install.sh
-    ```
+After installation, you can find `Ampurr` in your application menu (if you installed the GUI) or use the `ampurr` command in your terminal.
 
 ---
 
 ## ⚙️ Usage
 
-Ampurr is controlled via the `ampurr` command in your terminal.
+### Graphical User Interface (GUI)
 
-#### Show Status
-To see the currently set charge limit and the current battery capacity, use the `status` command:
-```bash
-ampurr status
-```
-*Example output:*
-```
-set charge limit: 80%
-current capacity:   65%
-```
+If you installed the GUI version, simply find and launch **"Ampurr"** from your system's application menu.
 
-#### Get Current Limit
-To see only the configured charge limit:
-```bash
-ampurr get
-```
-*Example output:*
-```
-current charge limit: 80%
-```
+The interface is divided into three tabs:
+*   **Power Control**: Set the battery charge limit and select the CPU power profile.
+*   **System Usage**: Monitor CPU load, RAM usage, and running processes.
+*   **Sensors**: View data from all available system sensors.
 
-#### Set a New Limit
-To set a new charge limit, use the `set` command with a value between 50 and 100. This requires superuser privileges.
-```bash
-sudo ampurr set 75
-```
-*Example output:*
-```
-✅ charge limit successfully set to 75% for the current session.
-✅ limit of 75% saved and will be applied on next boot.
-```
-The new limit is applied instantly and will be automatically restored after you reboot your machine.
+### Command-Line Interface (CLI)
+
+All features are also accessible via the `ampurr` command.
+
+#### Battery Management (`battery`)
+
+*   **Show status:**
+    ```bash
+    ampurr battery status
+    ```
+    *Example output:*
+    ```
+    set charge limit: 80%
+    current capacity:   65%
+    ```
+
+*   **Set a new limit (value from 50 to 100):**
+    ```bash
+    sudo ampurr battery set 75
+    ```
+
+#### CPU Management (`cpu`)
+
+*   **Show the current profile:**
+    ```bash
+    ampurr cpu status
+    ```
+    *Example output:*
+    ```
+    current CPU governor: powersave
+    ```
+*   **List available profiles:**
+    ```bash
+    ampurr cpu list
+    ```
+*   **Set a new profile:**
+    ```bash
+    sudo ampurr cpu set performance
+    ```
 
 ---
 
 ## 🗑️ Uninstalling
 
-If you wish to remove Ampurr from your system, you can use the uninstaller script from the same directory you cloned.
+To completely remove Ampurr from your system:
 
-1.  **Navigate into the directory (if you are not already there):**
-    ```bash
-    cd /path/to/ampurr
-    ```
+1.  **Navigate to the project directory** where the `uninstall.sh` script is located.
 
 2.  **Run the uninstaller with superuser privileges:**
     ```bash
     sudo bash uninstall.sh
     ```
-The script will stop the service, remove all installed files, and reset your battery charge limit back to 100%.
-
----
-thx^^
+The script will stop the service, remove all files (CLI, GUI, icons, menu entry), and reset your battery charge limit back to 100%.
