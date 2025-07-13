@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=Ampurr
+Comment=Manage battery and CPU power settings
+Exec=/usr/local/bin/ampurr-gui
+Icon=/usr/share/pixmaps/ampurr-logo.png
+Terminal=false
+Type=Application
+Categories=System;Utility;
