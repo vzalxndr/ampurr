@@ -1,6 +1,4 @@
 ![Header](repo_graphics/logo_main.png)
-# ampurr ᓚ₍ ^. .^₎
-
 > The purr-fect toolkit for managing your Linux hardware and extending your battery's health.
 
 Ampurr is a utility for Linux laptops designed to give you control over your hardware. It features both a powerful **GUI Dashboard** for system monitoring and a simple **CLI** for quick adjustments.
