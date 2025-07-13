@@ -42,11 +42,10 @@ install_gui() {
   mkdir -p "$GUI_RESOURCES_PATH"
   cp -r img "$GUI_RESOURCES_PATH/"
   # Important: The GUI script must know where to find the icons.
-  # You will need to adjust the paths in ampurr-gui.py!
   echo "    Resource files copied to $GUI_RESOURCES_PATH"
 
   # 3. Copy the application icon
-  cp img/logo.png "$ICON_PATH" # Assuming the main icon is logo.png
+  cp img/icon.png "$ICON_PATH"
 
   # 4. Create the .desktop file for the applications menu
   cat > "$DESKTOP_ENTRY_PATH" <<EOL
