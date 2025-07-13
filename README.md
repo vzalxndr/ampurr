@@ -12,7 +12,7 @@ Its primary goal is to help you extend your battery's lifespan by setting a char
 
 ## ✨ Features
 
-*   **Comprehensive GUI Dashboard**: A user-friendly panel to manage all features, monitor system resources, and view sensor data.
+*   **GUI Dashboard**: A user-friendly panel to manage all features, monitor system resources, and view sensor data.
 *   **Battery Charge Limiting**: Set a charge threshold (e.g., 80%) to reduce the stress on your battery from being constantly at 100%.
 *   **CPU Profile Management**: Switch between `powersave` and `performance` modes directly from the app to balance performance and power consumption.
 *   **System Monitoring**: Track CPU usage, RAM consumption, and a list of the top resource-hungry processes.
