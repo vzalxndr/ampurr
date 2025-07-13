@@ -1,3 +1,4 @@
+![Header](repo_graphics/main_logo.png)
 # ampurr ᓚ₍ ^. .^₎
 
 > The purr-fect toolkit for managing your Linux hardware and extending your battery's health.
