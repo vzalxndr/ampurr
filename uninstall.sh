@@ -1,28 +1,40 @@
 #!/bin/bash
 set -e
 
-# must be run as root
+# --- Configuration ---
+INSTALL_CLI_PATH="/usr/local/bin/ampurr"
+INSTALL_GUI_PATH="/usr/local/bin/ampurr-gui"
+GUI_RESOURCES_PATH="/usr/share/ampurr-gui"
+ICON_PATH="/usr/share/pixmaps/ampurr-logo.png"
+DESKTOP_ENTRY_PATH="/usr/share/applications/ampurr.desktop"
+
+# --- Main Logic ---
 if [ "$EUID" -ne 0 ]; then
-  echo "error: please run this script with sudo."
+  echo "Error: Please run this script with sudo."
   exit 1
 fi
 
-echo "uninstalling ampurr..."
+echo "Uninstalling ampurr..."
 
-# tell the script to uninstall its systemd service and reset the limit
-if [ -f "/usr/local/bin/ampurr" ]; then
-    /usr/local/bin/ampurr --uninstall
+# 1. Call the internal ampurr uninstaller
+if [ -f "$INSTALL_CLI_PATH" ]; then
+    "$INSTALL_CLI_PATH" --uninstall
 fi
 
-# remove the config file
-if [ -f "/etc/ampurr.conf" ]; then
-    echo "removing config file..."
-    rm -f "/etc/ampurr.conf"
-fi
+# 2. Remove the main executable files
+rm -f "$INSTALL_CLI_PATH"
+rm -f "$INSTALL_GUI_PATH"
 
-# remove the main script itself
-echo "removing main script..."
-rm -f "/usr/local/bin/ampurr"
+# 3. Remove GUI resources and the .desktop file if they exist
+if [ -d "$GUI_RESOURCES_PATH" ]; then
+    echo "Removing GUI resources..."
+    rm -rf "$GUI_RESOURCES_PATH"
+fi
+if [ -f "$DESKTOP_ENTRY_PATH" ]; then
+    echo "Removing application menu entry..."
+    rm -f "$DESKTOP_ENTRY_PATH"
+fi
+rm -f "$ICON_PATH"
 
 echo ""
 echo "✅ ampurr was successfully uninstalled."

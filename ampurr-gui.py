@@ -98,6 +98,7 @@ APP_STYLESHEET = """
     }
 """
 
+GUI_RESOURCES_PATH = "/usr/share/ampurr-gui"
 
 class IconTextButton(QWidget):
     """a custom widget that looks like a button but gives full style control"""
@@ -201,7 +202,7 @@ class AmpurrGUI(QWidget):
         header_container = QWidget();
         header_container.setMinimumHeight(60)
         icon_label = QLabel(header_container);
-        logo_pixmap = QPixmap('img/logo.png');
+        logo_pixmap = QPixmap(os.path.join(GUI_RESOURCES_PATH, 'img/logo.png'));
         icon_label.setPixmap(logo_pixmap.scaled(55, 55, Qt.KeepAspectRatio, Qt.SmoothTransformation));
         icon_label.move(0, 0)
         title_label = QLabel("ampurr", header_container);
@@ -212,9 +213,9 @@ class AmpurrGUI(QWidget):
         main_layout.addSpacing(10)
 
         self.tab_bar_layout = QHBoxLayout()
-        self.btn_power = IconTextButton('img/icon_power.png', "Power Control")
-        self.btn_usage = IconTextButton('img/icon_resources.png', "System Usage")
-        self.btn_sensors = IconTextButton('img/icon_sensors.png', "Sensors")
+        self.btn_power = IconTextButton(os.path.join(GUI_RESOURCES_PATH, 'img/icon_power.png'), "Power Control")
+        self.btn_usage = IconTextButton(os.path.join(GUI_RESOURCES_PATH, 'img/icon_resources.png'), "System Usage")
+        self.btn_sensors = IconTextButton(os.path.join(GUI_RESOURCES_PATH, 'img/icon_sensors.png'), "Sensors")
         self.tab_buttons = [self.btn_power, self.btn_usage, self.btn_sensors]
         self.tab_bar_layout.addWidget(self.btn_power);
         self.tab_bar_layout.addWidget(self.btn_usage);
