@@ -445,7 +445,7 @@ class AmpurrGUI(QWidget):
 
     def run_command(self, command, check=False):
         try:
-            return subprocess.run(command, capture_output=True, text=True, check=check, timeout=1.5).stdout.strip()
+            return subprocess.run(command, capture_output=True, text=True, check=check, timeout=40).stdout.strip()
         except Exception:
             return f"Error: Command '{command[0]}' failed."
 
